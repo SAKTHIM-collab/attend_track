@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-analytics-compat.js"></script>
+    <!-- Google Maps JavaScript API (Replace YOUR_GOOGLE_MAPS_API_KEY) -->
+    <!-- Libraries=places is essential for location search functionality -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBjU4oy2gozGX2xh-oodr3nLHCfEP2oqxM&libraries=places"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Attendance Tracker</h1>
+
+        <!-- Authentication Section -->
+        <section id="auth-section" class="card">
+            <h2>Welcome!</h2>
+            <div id="auth-forms">
+                <div id="login-form">
+                    <h3>Login</h3>
+                    <input type="email" id="login-email" placeholder="Email" required>
+                    <input type="password" id="login-password" placeholder="Password" required>
+                    <button id="login-btn">Login</button>
+                    <p>Don't have an account? <a href="#" id="show-signup">Sign Up</a></p>
+                </div>
+                <div id="signup-form" style="display: none;">
+                    <h3>Sign Up</h3>
+                    <input type="email" id="signup-email" placeholder="Email" required>
+                    <input type="password" id="signup-password" placeholder="Password" required>
+                    <button id="signup-btn">Sign Up</button>
+                    <p>Already have an account? <a href="#" id="show-login">Login</a></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main App Section (Hidden until authenticated) -->
+        <section id="app-section" style="display: none;">
+            <div class="header-controls">
+                <span id="user-email-display"></span>
+                <button id="logout-btn">Logout</button>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-button active" data-tab="dashboard">Dashboard</button>
+                <button class="tab-button" data-tab="settings">Settings</button>
+                <button class="tab-button" data-tab="schedule">Schedule</button>
+                <button class="tab-button" data-tab="attendance-view">Attendance View</button>
+            </div>
+
+            <!-- Dashboard Tab -->
+            <div id="dashboard-tab" class="tab-content active card">
+                <h2>Dashboard</h2>
+                <div class="dashboard-stats">
+                    <div>
+                        <h3>Monthly Attendance (Modified)</h3>
+                        <p id="monthly-modified-percent">- %</p>
+                    </div>
+                    <div>
+                        <h3>Monthly Attendance (Original)</h3>
+                        <p id="monthly-original-percent">- %</p>
+                    </div>
+                </div>
+                <h3>Today's Attendance</h3>
+                <table id="today-attendance-table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Subject</th>
+                            <th>Status</th>
+                            <th>Modified</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Today's attendance will be populated here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings-tab" class="tab-content card" style="display: none;">
+                <h2>Settings</h2>
+                <h3>Minimum Attendance Percentage</h3>
+                <div class="input-group">
+                    <input type="number" id="min-attendance-percent" min="0" max="100" placeholder="e.g., 75" required> %
+                    <button id="save-min-percent-btn">Save</button>
+                </div>
+
+                <h3>Subjects</h3>
+                <div class="input-group">
+                    <input type="text" id="new-subject-name" placeholder="Add new subject" required>
+                    <button id="add-subject-btn">Add Subject</button>
+                </div>
+                <ul id="subjects-list">
+                    <!-- Subjects will be populated here -->
+                </ul>
+            </div>
+
+            <!-- Schedule Tab -->
+            <div id="schedule-tab" class="tab-content card" style="display: none;">
+                <h2>Manage Schedule</h2>
+                <h3>Add New Slot</h3>
+                <form id="add-slot-form" class="slot-form">
+                    <div class="form-group">
+                        <label for="slot-day">Day:</label>
+                        <select id="slot-day" required>
+                            <option value="">Select Day</option>
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="slot-subject">Subject:</label>
+                        <select id="slot-subject" required>
+                            <option value="">Select Subject</option>
+                            <!-- Subjects will be populated here by JS -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="slot-from">From:</label>
+                        <input type="time" id="slot-from" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="slot-to">To:</label>
+                        <input type="time" id="slot-to" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="slot-location-search">Location:</label>
+                        <input type="text" id="slot-location-search" placeholder="Search for a location" required>
+                        <input type="hidden" id="slot-lat">
+                        <input type="hidden" id="slot-lng">
+                        <input type="hidden" id="slot-location-name">
+                        <div id="slot-map" style="height: 200px; width: 100%; margin-top: 10px; display: none;"></div>
+                    </div>
+                    <button type="submit">Add Slot</button>
+                </form>
+
+                <h3>Your Schedule</h3>
+                <ul id="schedule-list">
+                    <!-- Schedule slots will be populated here -->
+                </ul>
+            </div>
+
+            <!-- Attendance View Tab -->
+            <div id="attendance-view-tab" class="tab-content card" style="display: none;">
+                <h2>Attendance History</h2>
+                <div class="input-group">
+                    <label for="attendance-month-select">Select Month:</label>
+                    <input type="month" id="attendance-month-select">
+                </div>
+                <table id="attendance-history-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Subject</th>
+                            <th>Status</th>
+                            <th>Original Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Attendance history will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <!-- Custom Notification/Message Box -->
+    <div id="message-box-overlay" class="message-box-overlay">
+        <div class="message-box">
+            <p id="message-box-text"></p>
+            <button id="message-box-ok-btn">OK</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
