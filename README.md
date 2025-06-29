@@ -29,23 +29,7 @@ Backend: Firebase (Authentication, Cloud Firestore)
 
 APIs: Google Maps, Browser Geolocation, Browser Notifications
 
-Project Structure
-attend_track/
-├── .gitignore
-├── README.md
-├── firebase.json
-├── .firebaserc
-└── public/
-    ├── css/
-    │   └── style.css
-    ├── js/
-    │   ├── app.js
-    │   ├── auth.js
-    │   ├── firestore.js
-    │   ├── schedule.js
-    │   ├── attendance.js
-    │   └── utils.js
-    └── index.html
+
 
 Setup & Running
 Clone: git clone https://github.com/SAKTHIM-collab/attend_track.git
