@@ -1,53 +1,42 @@
-# Node.js and npm/Yarn related files (if you use them for dependencies)
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Environment variables (CRUCIAL for sensitive info like non-public API keys)
 .env
 .env.*
 !.env.example # Keep example files for structure but not actual values
 
-# Firebase specific files
 .firebase/
 firebase-debug.log
 firebase-debug.*.log
 *.env.local # If Firebase CLI creates local environment files
 
-# Log files
 *.log
 logs/
 *.json.log
 
-# Editor/IDE specific files
 .vscode/        # Visual Studio Code
 .idea/          # IntelliJ IDEA, WebStorm, etc.
 *.sublime-project
 *.sublime-workspace
 
-# Operating System Files
 .DS_Store       # macOS
 Thumbs.db       # Windows
 ehthumbs.db     # Windows
 Desktop.ini     # Windows
 .localized      # macOS
 
-# Temporary/Cache files
 *.tmp
 *.temp
 *.swp           # Vim swap files
 *~              # Temporary files created by some editors
 
-# Build output directories (if you ever add a build step)
 dist/
 build/
 out/
 .cache/
 
-# Test/Coverage reports
 coverage/
 .nyc_output/
 
-# Dependencies folder (sometimes used, but node_modules is more common)
-# dependencies/

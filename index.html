@@ -5,20 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Attendance Tracker</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Firebase SDKs -->
+    
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-analytics-compat.js"></script>
-    <!-- Google Maps JavaScript API (Replace YOUR_GOOGLE_MAPS_API_KEY) -->
-    <!-- Libraries=places is essential for location search functionality -->
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBjU4oy2gozGX2xh-oodr3nLHCfEP2oqxM&libraries=places"></script>
 </head>
 <body>
     <div class="container">
         <h1>Attendance Tracker</h1>
 
-        <!-- Authentication Section -->
         <section id="auth-section" class="card">
             <h2>Welcome!</h2>
             <div id="auth-forms">
@@ -39,7 +36,6 @@
             </div>
         </section>
 
-        <!-- Main App Section (Hidden until authenticated) -->
         <section id="app-section" style="display: none;">
             <div class="header-controls">
                 <span id="user-email-display"></span>
@@ -53,7 +49,6 @@
                 <button class="tab-button" data-tab="attendance-view">Attendance View</button>
             </div>
 
-            <!-- Dashboard Tab -->
             <div id="dashboard-tab" class="tab-content active card">
                 <h2>Dashboard</h2>
                 <div class="dashboard-stats">
@@ -77,12 +72,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Today's attendance will be populated here by JavaScript -->
                     </tbody>
                 </table>
             </div>
 
-            <!-- Settings Tab -->
             <div id="settings-tab" class="tab-content card" style="display: none;">
                 <h2>Settings</h2>
                 <h3>Minimum Attendance Percentage</h3>
@@ -97,11 +90,9 @@
                     <button id="add-subject-btn">Add Subject</button>
                 </div>
                 <ul id="subjects-list">
-                    <!-- Subjects will be populated here -->
                 </ul>
             </div>
 
-            <!-- Schedule Tab -->
             <div id="schedule-tab" class="tab-content card" style="display: none;">
                 <h2>Manage Schedule</h2>
                 <h3>Add New Slot</h3>
@@ -121,7 +112,6 @@
                         <label for="slot-subject">Subject:</label>
                         <select id="slot-subject" required>
                             <option value="">Select Subject</option>
-                            <!-- Subjects will be populated here by JS -->
                         </select>
                     </div>
                     <div class="form-group">
@@ -145,11 +135,9 @@
 
                 <h3>Your Schedule</h3>
                 <ul id="schedule-list">
-                    <!-- Schedule slots will be populated here -->
                 </ul>
             </div>
 
-            <!-- Attendance View Tab -->
             <div id="attendance-view-tab" class="tab-content card" style="display: none;">
                 <h2>Attendance History</h2>
                 <div class="input-group">
@@ -168,14 +156,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Attendance history will be populated here -->
                     </tbody>
                 </table>
             </div>
         </section>
     </div>
 
-    <!-- Custom Notification/Message Box -->
     <div id="message-box-overlay" class="message-box-overlay">
         <div class="message-box">
             <p id="message-box-text"></p>
